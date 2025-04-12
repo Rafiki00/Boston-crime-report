@@ -1,2 +1,3 @@
 keys/
 airflow/logs
+dbt/logs

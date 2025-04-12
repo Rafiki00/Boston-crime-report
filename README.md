@@ -1,10 +1,14 @@
 # Boston Crime Report
 
-A comprehensive data engineering project that analyzes Boston crime data for trends, correlations, and insights. This project includes an end-to-end data pipeline using Airflow, a containerized environment with Docker, and a PostgreSQL database to store and process crime data.
+
+This repository is a final project from the **Data Engineering Zoomcamp 2025** that showcases an end-to-end pipeline for Boston crime data (2015–2025). Utilizing **Docker** and **Airflow** for orchestration, data is ingested into **BigQuery** and visualized through **Looker Studio**. The core dataset originates from [Boston’s open data portal](https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system), which includes crime incident reports spanning August 2015 to the present. By containerizing components and leveraging a modern analytics stack, this project illustrates best practices for scalable data engineering.
+
+The final visualization can be viewed here: https://lookerstudio.google.com/reporting/80a53f8c-b344-4944-a023-0ad1bcbd6676 (up until April 15th 2025).
+
+![alt text](<Boston-crime-data (1).jpg>)
 
 ## Table of Contents
-1. [Background & Motivation](#background--motivation)
-2. [Data Source](#data-source)
+1. [Data Source](#data-source)
 3. [Project Structure](#project-structure)
 4. [Setup & Installation](#setup--installation)
 5. [Data Pipeline / Workflow](#data-pipeline--workflow)
@@ -13,101 +17,123 @@ A comprehensive data engineering project that analyzes Boston crime data for tre
 8. [Future Improvements](#future-improvements)
 9. [License](#license)
 
----
-
-## Background & Motivation
-Explain why this project was created and what problems or questions it addresses.
-
-> Example:  
-> This project aims to understand crime patterns in Boston over multiple years. By analyzing publicly available data, we hope to highlight areas with high crime rates, trends over time, and insights that may inform law enforcement or policy decisions.
 
 ---
 
 ## Data Source
-Provide details about where the data comes from and any relevant metadata.
 
-- **Source**: (e.g., Boston Open Data Portal)  
-- **Time Range**: 2016–2021  
-- **Data Format**: CSV files, including columns for date/time, latitude/longitude, offense code, and more.
+This project integrates data from multiple files and references published on Boston’s official open data portal:
 
-Mention any preprocessing steps (removing duplicates, cleaning missing values, etc.).
+- **Crime Incidents (2015–2025)**  
+  [Crime Incident Reports (August 2015–Present)](https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system)  
+  These files are offered as annual CSVs (except 2023 file contains 2024 and 2025), each containing fields such as date/time, offense code, district, and location information. The same link also provides an Excel file for offense codes, mapping each code to its corresponding description and category.
 
+- **District & Station Reference (CSV)**  
+  [Boston Police Stations (BPD only)](https://data.boston.gov/dataset/8aa8671a-94fb-4bdd-9283-4a25d7d640cc/resource/c2b3f4c4-2339-4f14-9f44-86bee255e07d/download/boston_police_stations_bpd_only.csv)  
+  Used for referencing district names and ensuring consistent identification across different records.
 ---
 
 ## Project Structure
-Below is an overview of the folder layout in this repository:
+Below is a summarized overview of the folder layout in this repository:
+```
+.
+├── docker-compose.yml
+├── Dockerfile
+├── requirements.txt
+├── airflow/
+│   ├── dags/
+│   │   ├── dbt_build_mart.py
+│   │   ├── load_incidents.py
+│   │   ├── load_offense_codes.py
+│   │   └── load_police_districts.py
+├── dbt/
+│   ├── dbt_project.yml
+│   ├── profiles.yml
+│   ├── models/
+│   │   ├── mart/
+│   │   │   ├── district_dim.sql
+│   │   │   ├── incident_fact.sql
+│   │   │   └── vw_incident_district.sql
+│   │   └── sources/
+│   │       └── boston_crime.yml
+```
 
-    .
-    ├── docker-compose.yml
-    ├── airflow/
-    │   ├── dags/
-    │   ├── plugins/
-    │   └── ...
-    ├── data/
-    │   ├── raw/
-    │   └── processed/
-    ├── notebooks/
-    │   └── analysis.ipynb
-    ├── scripts/
-    │   └── transform_data.py
-    ├── README.md
-    └── ...
 
-- **airflow/**: Contains Airflow DAGs for scheduling the data pipeline.  
-- **data/**: Raw datasets and cleaned/processed datasets.  
-- **notebooks/**: Jupyter notebooks for exploratory data analysis (EDA) and/or reporting.  
-- **scripts/**: Python scripts for data transformation or additional processing steps.  
-- **docker-compose.yml**: Defines the Docker containers (Airflow, PostgreSQL, etc.).
+- **airflow/**  
+  Contains Airflow DAGs for scheduling and orchestrating the data pipeline.
+- **dbt/**  
+  Holds the dbt project configuration, profiles, and SQL models for data transformations. The models are run through Airflow.
+- **docker-compose.yml**  
+  Defines the Docker services (e.g., Airflow, PostgreSQL) used throughout the project.
+- **Dockerfile** / **requirements.txt**  
+  Used to build container images and specify required Python dependencies.
+
 
 ---
 
 ## Setup & Installation
 
 ### Prerequisites
-- Docker & Docker Compose installed on your machine.
-- (Optional) Python + pip if you want to run any code locally outside the containers.
+- **Docker** and **Docker Compose** installed on your machine
+- A **Google Cloud Platform** (GCP) account with permissions to:
+  - Create and use Google Cloud Storage (GCS) buckets
+  - Create and manage BigQuery datasets and tables
 
 ### Steps
 
-1. **Clone the repository**:
+1. **Clone the Repository**  
+   ```bash
+   git clone https://github.com/your-username/Boston-crime-report.git
+   cd Boston-crime-report
+   ```
 
-    git clone https://github.com/your-username/Boston-crime-report.git  
-    cd Boston-crime-report
+ 2. **Configure GCP Credentials**  
+   - Place your GCP credentials JSON file in a secure location (e.g., `keys/creds.json`).  
+   - Ensure your Docker containers can access these credentials. For example, set environment variables in a `.env` file or specify the path directly in your `docker-compose.yml`.
 
-2. **Spin up the Docker environment**:
+3. **Build & Start the Containers**  
+   ```bash
+   docker-compose up --build
+   ```  
+- This command spins up Airflow (webserver, scheduler) and any other services defined in docker-compose.yml.
 
-    docker-compose up --build
+4. **Access the Airflow UI**  
+   - By default, the Airflow webserver runs at [http://localhost:8080](http://localhost:8080), unless otherwise configured in `docker-compose.yml`.  
+   - Log in using the credentials specified in your environment or the Docker configuration.
 
-   This starts containers for Airflow (webserver, scheduler) and PostgreSQL.
-
-3. **Check Airflow**:  
-   - By default, the Airflow webserver may be available at http://localhost:8080 (depending on `docker-compose.yml` settings).  
-   - The default Airflow username/password may also be set in your environment (look in your `.env` or the compose file).
-
-4. **(Optional) Additional Local Steps**:  
-   - If you want to run a Jupyter notebook locally (not in Docker), create a virtual environment and install dependencies:
-
-        python -m venv venv  
-        source venv/bin/activate   # On Mac/Linux  
-        pip install -r requirements.txt
-
-   - Then you can run `jupyter notebook` or `jupyter lab` to explore the notebooks.
+5. **Trigger the DAGs in the Correct Order**  
+   1. **`upload_to_gcs`** – Downloads data from the source websites and uploads it to Google Cloud Storage (GCS).  
+   2. **`load_incidents`** – Loads the crime incident CSVs from GCS into BigQuery.  
+   3. **`load_offense_codes`** – Converts Excel offense codes into CSV and loads them into BigQuery.  
+   4. **`load_police_districts`** – Loads district reference CSV file into BigQuery.  
+   5. **`dbt_build_mart`** – Executes dbt models to transform data into dimension/fact tables.
 
 ---
 
 ## Data Pipeline / Workflow
-Detail the workflow steps you implemented. For example:
 
-1. **Extract**: Download or pull the Boston crime dataset from an open data portal.  
-2. **Load**: Store the raw data in a staging table inside PostgreSQL.  
-3. **Transform**: Use Airflow tasks or Python scripts to clean and format the data.  
-4. **Analyze**: Notebook-based or script-based exploratory analysis and visualization.  
-5. **Report**: Generate dashboards, plots, or summaries of findings.
+This project follows a structured sequence of steps to acquire, transform, and visualize Boston crime data:
 
-If you have Airflow DAG files, mention how to enable or manually trigger them:
+1. **Download & Upload to Google Cloud Storage**  
+   An Airflow job fetches the raw files (CSV/Excel) from the official Boston open data portal and uploads them into a designated GCS bucket.
 
-    airflow dags list  
-    airflow dags trigger boston_crime_dag
+![alt text](Boston-crime-report-upload.jpg)
+
+2. **Load to Staging Tables**  
+   Three separate Airflow tasks load the files from GCS into corresponding staging tables, ensuring each dataset (crime incidents, offense codes, and police districts) is properly structured in **BigQuery**.
+
+![alt text](<Boston-crime-data-load (1).jpg>)
+
+3. **Build Fact & Dimension Tables with dbt**  
+   A final Airflow task invokes **dbt** to transform the staging tables into a dimensional model, creating fact and dimension tables—and a dedicated view for use in **Looker Studio**.
+
+![alt text](boston-crime-dbt.jpg)
+
+4. **Visualize in Looker Studio**  
+   Once the data is processed and available in BigQuery, a Looker Studio report can be used to visualize the data.
+
+
+
 
 ---
 
