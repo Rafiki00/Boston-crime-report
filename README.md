@@ -1,7 +1,7 @@
 # Boston Crime Report
 
 
-This repository is a final project from the **Data Engineering Zoomcamp 2025** that showcases an end-to-end pipeline for Boston crime data (2015–2025). Utilizing **Docker** and **Airflow** for orchestration, data is ingested into **BigQuery** and visualized through **Looker Studio**. The core dataset originates from [Boston’s open data portal](https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system), which includes crime incident reports spanning August 2015 to the present. By containerizing components and leveraging a modern analytics stack, this project illustrates best practices for scalable data engineering.
+This repository is my final project for the **Data Engineering Zoomcamp 2025** that showcases an end-to-end pipeline for Boston crime data (2015–2025). Utilizing **Docker**, **dbt** and **Airflow** for orchestration, data is ingested into **BigQuery** and visualized through **Looker Studio**. The core dataset originates from [Boston’s open data portal](https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system), which includes crime incident reports spanning August 2015 to the present. By containerizing components and leveraging a modern analytics stack, this project illustrates best practices for scalable data engineering.
 
 The final visualization can be viewed here: https://lookerstudio.google.com/reporting/80a53f8c-b344-4944-a023-0ad1bcbd6676 (up until April 15th 2025).
 
