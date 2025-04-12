@@ -9,14 +9,12 @@ The final visualization can be viewed here: https://lookerstudio.google.com/repo
 
 ## Table of Contents
 1. [Data Source](#data-source)
-3. [Project Structure](#project-structure)
-4. [Setup & Installation](#setup--installation)
-5. [Data Pipeline / Workflow](#data-pipeline--workflow)
-6. [Analysis & Findings](#analysis--findings)
-7. [How to Use / Run the Project](#how-to-use--run-the-project)
-8. [Future Improvements](#future-improvements)
-9. [License](#license)
-
+2. [Project Structure](#project-structure)
+3. [Setup & Installation](#setup--installation)
+4. [Data Pipeline / Workflow](#data-pipeline--workflow)
+5. [Visualization Exhibits](#visualization-exhibits)
+6. [Future Improvements](#future-improvements)
+7. [Credits and Contact](#credits-and-contact)
 
 ---
 
@@ -132,10 +130,8 @@ This project follows a structured sequence of steps to acquire, transform, and v
 4. **Visualize in Looker Studio**  
    Once the data is processed and available in BigQuery, a Looker Studio report can be used to visualize the data.
 
-
-
-
 ---
+
 ## Visualization Exhibits
 
 A complete visualization of the data is accessible in Looker; however, due to the project’s associated usage credits, it will be decommissioned on April 15, 2025.
@@ -164,7 +160,7 @@ On the following page, there are three exhibits:
 
    ![alt text](images/image-4.png)
 
-3. A pivot table listing selected offenses and their **Frequency by Neighborhood**:
+3. A pivot table listing selected offenses and their frequency by neighborhood:
 
    ![alt text](images/image-5.png)
 
@@ -192,9 +188,10 @@ On the following page, there are three exhibits:
 
 ---
 
-## Contact / Credits
+## Credits and Contact
 
 - **Author**: Rafael Llopis Garijo (GitHub: [Rafiki00](https://github.com/Rafiki00))
+- **Special Thanks**: [Data Engineering Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main) for the knowledge and guidance.
 - For feedback, suggestions, or contributions, please open an issue or submit a pull request in this repository.
 
 
