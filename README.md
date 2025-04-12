@@ -134,7 +134,7 @@ This project follows a structured sequence of steps to acquire, transform, and v
 
 ## Visualization Exhibits
 
-A complete visualization of the data is accessible in Looker; however, due to the project’s associated usage credits, it will be decommissioned on April 15, 2025. A static pdf version can be found [here](reports/Boston_Crime_Report.pdf).
+A complete visualization of the data is accessible in Looker; however, due to the project’s associated usage credits, it will be decommissioned on April 15, 2025. A static pdf version can be found [here](Boston_Crime_Report.pdf).
 
 At the top of the dashboard, two scorecards display the most recent date loaded and the total number of incidents recorded so far this year:
 
