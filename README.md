@@ -5,7 +5,7 @@ This repository is a final project from the **Data Engineering Zoomcamp 2025** t
 
 The final visualization can be viewed here: https://lookerstudio.google.com/reporting/80a53f8c-b344-4944-a023-0ad1bcbd6676 (up until April 15th 2025).
 
-![alt text](<Boston-crime-data (1).jpg>)
+![alt text](<images/Boston-crime-data (1).jpg>)
 
 ## Table of Contents
 1. [Data Source](#data-source)
@@ -117,17 +117,17 @@ This project follows a structured sequence of steps to acquire, transform, and v
 1. **Download & Upload to Google Cloud Storage**  
    An Airflow job fetches the raw files (CSV/Excel) from the official Boston open data portal and uploads them into a designated GCS bucket.
 
-![alt text](Boston-crime-report-upload.jpg)
+![alt text](images/Boston-crime-report-upload.jpg)
 
 2. **Load to Staging Tables**  
    Three separate Airflow tasks load the files from GCS into corresponding staging tables, ensuring each dataset (crime incidents, offense codes, and police districts) is properly structured in **BigQuery**.
 
-![alt text](<Boston-crime-data-load (1).jpg>)
+![alt text](<images/Boston-crime-data-load (1).jpg>)
 
 3. **Build Fact & Dimension Tables with dbt**  
    A final Airflow task invokes **dbt** to transform the staging tables into a dimensional model, creating fact and dimension tables—and a dedicated view for use in **Looker Studio**.
 
-![alt text](boston-crime-dbt.jpg)
+![alt text](images/boston-crime-dbt.jpg)
 
 4. **Visualize in Looker Studio**  
    Once the data is processed and available in BigQuery, a Looker Studio report can be used to visualize the data.
@@ -136,49 +136,65 @@ This project follows a structured sequence of steps to acquire, transform, and v
 
 
 ---
+## Visualization Exhibits
 
-## Analysis & Findings
-Highlight interesting insights or visualizations:
+A complete visualization of the data is accessible in Looker; however, due to the project’s associated usage credits, it will be decommissioned on April 15, 2025.
 
-- **Trend Analysis**: Crime rates by year, season, or day of week.  
-- **Geographic Hotspots**: Mapping or clustering to identify areas with higher incidents.  
-- **Correlations**: Any significant relationships between crime types and external factors (time of day, weather, demographics, etc.).
+At the top of the dashboard, two scorecards display the most recent date loaded and the total number of incidents recorded so far this year:
 
-If you have images or charts, include them like so:
+![alt text](images/image.png)
 
-    ![Crime Hotspot Map](images/crime_hotspots.png)
+Because the dataset from Boston’s website is continually updated, rerunning the pipelines will refresh these figures with the latest data.
 
-> Example Key Takeaway:  
-> Downtown Boston shows a higher density of reported crimes on weekends, largely involving theft and assault. Seasonal trends suggest an increase in burglaries during winter months.
+The **Number of Reported Incidents Over Time** chart shows the total number of incidents from 2016 to 2024 (only including years with complete data):
 
----
+![alt text](images/image-1.png)
 
-## How to Use / Run the Project
-1. **Running the Pipeline**: Once the Docker containers are up, Airflow may auto-schedule the main DAG. Or you can manually trigger it:
+Next, a navigable map plots incidents throughout Boston using their latitude and longitude coordinates:
 
-       airflow dags trigger boston_crime_dag
+![alt text](images/image-6.png)
 
-2. **Generating Reports**: If you have a notebook (e.g., `analysis.ipynb`), open it in Jupyter or another environment, run all cells, and review any charts or summary outputs.
+On the following page, there are three exhibits:
+
+1. A table of the **Top 10 Offenses** in the dataset:
+
+   ![alt text](images/image-3.png)
+
+2. A pie chart illustrating the **Proportion of Crimes by Neighborhood**:
+
+   ![alt text](images/image-4.png)
+
+3. A pivot table listing selected offenses and their **Frequency by Neighborhood**:
+
+   ![alt text](images/image-5.png)
+
+
 
 ---
 
 ## Future Improvements
-- **Data Enrichment**: Merge with demographic or weather data to see more detailed correlations.  
-- **Machine Learning**: Build predictive models for crime occurrence or severity.  
-- **Dashboard**: Create an interactive dashboard (e.g., Streamlit or Dash) to explore results in real time.  
-- **Automated Data Updates**: Extend the pipeline to pull new data periodically and update analyses.
 
----
+- **Use the Boston Data API**  
+  Transition from manual CSV/Excel ingestion to the official API for a more automated and real-time data flow.
 
-## License
-If you’d like to open-source this project, add a license here (e.g., MIT). Otherwise, clarify your usage terms.
+- **Create a Dedicated Offense Description Dimension**  
+  Currently, the focus is on districts and neighborhood names. Adding a standalone dimension for offense descriptions would enhance analytical capabilities.
 
-> Example:  
-> This project is licensed under the [MIT License](LICENSE).
+- **Expand Visual Exhibits**  
+  Incorporate additional charts, maps, and interactive filters for deeper insights.
+
+- **Enrich Data Analysis**  
+  Perform more detailed statistical or exploratory evaluations, identifying patterns or anomalies within the dataset.
+
+- **Integrate Predictive Modeling**  
+  Develop machine learning models to forecast crime likelihood or severity, providing proactive insights for stakeholders.
+
 
 ---
 
 ## Contact / Credits
-- **Author**: [Your Name / GitHub Handle]  
-- **Contact**: Provide an email or social link if you’d like feedback or contributions.
+
+- **Author**: Rafael Llopis Garijo (GitHub: [Rafiki00](https://github.com/Rafiki00))
+- For feedback, suggestions, or contributions, please open an issue or submit a pull request in this repository.
+
 
